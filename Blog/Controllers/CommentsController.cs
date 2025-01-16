@@ -60,13 +60,16 @@ namespace Blog.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _context.Database
-                    .ExecuteSqlCommandAsync
-                    ($"insert into comments Id,Body, Author Values ('{comment.Id}','{comment.Body}',''{comment.Author}");
+                string sqlCommand = "INSERT INTO comments (Id, Body, Author) VALUES (@Id, @Body, @Author)";
+                var parameters = new[]
+                {
+                    new SqlParameter("@Id", comment.Id),
+                    new SqlParameter("@Body", comment.Body),
+                    new SqlParameter("@Author", comment.Author)
+                };
 
-                // Correct way to add a user that's not vulnerable to SQL Injection:
-                //_context.Add(comment);
-                //await _context.SaveChangesAsync();
+                await _context.Database.ExecuteSqlCommandAsync(sqlCommand, parameters);
+
                 return RedirectToAction("Index");
             }
             return View(comment);
