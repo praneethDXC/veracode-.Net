@@ -107,6 +107,7 @@ namespace Blog.Controllers
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Username,Password")] User user)
         {
             if (id != user.Id)
